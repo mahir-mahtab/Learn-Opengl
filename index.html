@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive OpenGL Learning Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals (#FDFBF6, #3C3633, #E07A5F, #81B29A) -->
+    <!-- Application Structure Plan: A single-page dashboard with sticky top navigation for quick access to thematic sections: Fundamentals, Setup, Learning Path, Practice, and Next Steps. This non-linear structure replaces the report's linear format to empower users to explore topics based on their immediate needs (e.g., a user struggling with setup can jump directly there). Interactive elements like a clickable rendering pipeline and a dynamic setup checklist are used to transform passive reading into active learning and information filtering. -->
+    <!-- Visualization & Content Choices: 1. Rendering Pipeline (Report Info) -> Goal: Organize/Inform -> Viz: Interactive HTML/CSS diagram -> Interaction: Click to reveal stage details. Justification: Visualizes a core abstract concept. 2. API Comparison (Report Info) -> Goal: Compare -> Viz: Chart.js Horizontal Bar Chart -> Interaction: Hover for tooltips. Justification: Provides a quick visual summary of trade-offs between OpenGL/Vulkan. 3. Setup Steps (Report Info) -> Goal: Organize/Inform -> Viz: Dynamic content blocks -> Interaction: Select OS/Language to filter content. Justification: Personalizes information and reduces complexity. 4. Resources List (Report Info) -> Goal: Organize -> Viz: Tabbed card layout -> Interaction: Click tabs to switch categories. Justification: Improves scannability and organization over a flat list. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF6;
+            color: #3C3633;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover {
+            color: #E07A5F;
+            border-bottom-color: #E07A5F;
+        }
+        .tab-btn.active {
+            background-color: #E07A5F;
+            color: #FFFFFF;
+        }
+        .pipeline-stage {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .pipeline-stage:hover, .pipeline-stage.active {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-color: #E07A5F;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="text-center py-8 md:py-12 bg-white/50 backdrop-blur-sm">
+        <h1 class="text-4xl md:text-5xl font-bold text-[#E07A5F]">Mastering OpenGL</h1>
+        <p class="mt-2 text-lg md:text-xl text-gray-600">Your Interactive Roadmap to Graphics Programming</p>
+    </header>
+
+    <nav id="navbar" class="sticky top-0 z-50 bg-[#FDFBF6]/80 backdrop-blur-lg shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-center items-center space-x-2 md:space-x-8 py-3 overflow-x-auto">
+                <a href="#fundamentals" class="nav-link text-sm md:text-base font-medium py-2 px-3 whitespace-nowrap">Fundamentals</a>
+                <a href="#setup" class="nav-link text-sm md:text-base font-medium py-2 px-3 whitespace-nowrap">Setup</a>
+                <a href="#learning-path" class="nav-link text-sm md:text-base font-medium py-2 px-3 whitespace-nowrap">Learning Path</a>
+                <a href="#practice" class="nav-link text-sm md:text-base font-medium py-2 px-3 whitespace-nowrap">Practice & Community</a>
+                <a href="#next-steps" class="nav-link text-sm md:text-base font-medium py-2 px-3 whitespace-nowrap">Next Steps</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4 md:p-8">
+
+        <section id="fundamentals" class="py-12 md:py-16">
+            <h2 class="text-3xl font-bold text-center mb-2">The Big Picture</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">This section introduces the core concepts of OpenGL. Understanding what it is, why the modern approach is critical, and how the rendering pipeline works is the first step on your journey. These fundamentals provide the context for everything that follows.</p>
+
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h3 class="text-2xl font-semibold mb-3 text-[#81B29A]">What is OpenGL?</h3>
+                    <p class="text-gray-700 leading-relaxed">OpenGL (Open Graphics Library) is a cross-platform API for rendering 2D and 3D graphics. It provides a standard set of commands to interact directly with your GPU, allowing for high-performance, hardware-accelerated visualizations. Because it's an open standard, it runs on virtually all operating systems, making it a powerful and accessible tool for developers, hobbyists, and researchers.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                     <h3 class="text-2xl font-semibold mb-3 text-[#81B29A]">Why Modern OpenGL?</h3>
+                    <p class="text-gray-700 leading-relaxed">Older "immediate mode" OpenGL is deprecated. Modern "core-profile" OpenGL gives you direct control over the graphics pipeline using programmable shaders. While this requires a deeper understanding, it unlocks immense performance gains and creative flexibility. Learning modern OpenGL is essential for contemporary graphics and provides a solid foundation before tackling more complex APIs like Vulkan.</p>
+                </div>
+            </div>
+
+            <div class="mt-16">
+                <h3 class="text-2xl font-semibold text-center mb-8">The Modern Rendering Pipeline</h3>
+                <div id="pipeline-diagram" class="flex flex-col md:flex-row justify-center items-center gap-2 md:gap-4 text-center">
+                    <div data-stage="vertex" class="pipeline-stage bg-white p-4 rounded-lg shadow-md border-2 border-transparent w-full md:w-48">
+                        <h4 class="font-semibold">Vertex Data</h4>
+                        <p class="text-xs text-gray-500">Input 3D coordinates</p>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-400 transform md:-rotate-90">&#10145;</div>
+                    <div data-stage="vertex-shader" class="pipeline-stage bg-white p-4 rounded-lg shadow-md border-2 border-transparent w-full md:w-48">
+                        <h4 class="font-semibold">Vertex Shader</h4>
+                        <p class="text-xs text-gray-500">Process vertices</p>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-400 transform md:-rotate-90">&#10145;</div>
+                    <div data-stage="rasterization" class="pipeline-stage bg-white p-4 rounded-lg shadow-md border-2 border-transparent w-full md:w-48">
+                        <h4 class="font-semibold">Rasterization</h4>
+                        <p class="text-xs text-gray-500">Create fragments</p>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-400 transform md:-rotate-90">&#10145;</div>
+                    <div data-stage="fragment-shader" class="pipeline-stage bg-white p-4 rounded-lg shadow-md border-2 border-transparent w-full md:w-48">
+                        <h4 class="font-semibold">Fragment Shader</h4>
+                        <p class="text-xs text-gray-500">Color pixels</p>
+                    </div>
+                    <div class="text-2xl font-bold text-gray-400 transform md:-rotate-90">&#10145;</div>
+                    <div data-stage="output" class="pipeline-stage bg-white p-4 rounded-lg shadow-md border-2 border-transparent w-full md:w-48">
+                        <h4 class="font-semibold">Framebuffer</h4>
+                        <p class="text-xs text-gray-500">Final image</p>
+                    </div>
+                </div>
+                <div id="pipeline-info" class="mt-8 bg-white p-6 rounded-lg shadow-md min-h-[100px] fade-in">
+                    <p class="text-gray-600 text-center">Click on a stage above to learn more about it.</p>
+                </div>
+            </div>
+            
+            <div class="mt-16">
+                <h3 class="text-2xl font-semibold text-center mb-8">API Comparison: Control vs. Ease of Use</h3>
+                <div class="chart-container">
+                    <canvas id="apiComparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="setup" class="py-12 md:py-16 bg-white rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-center mb-2">Your Toolkit</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">A correct setup is the most critical and often most frustrating part of starting with OpenGL. This interactive guide helps you identify the essential tools and steps for your specific system. Select your operating system to see a tailored checklist.</p>
+            
+            <div class="flex justify-center mb-8">
+                <div class="bg-gray-200 p-1 rounded-full flex space-x-1">
+                    <button data-os="windows" class="os-btn px-4 py-2 text-sm font-medium rounded-full transition">Windows</button>
+                    <button data-os="macos" class="os-btn px-4 py-2 text-sm font-medium rounded-full transition">macOS</button>
+                    <button data-os="linux" class="os-btn px-4 py-2 text-sm font-medium rounded-full transition">Linux</button>
+                </div>
+            </div>
+
+            <div id="setup-content" class="max-w-4xl mx-auto">
+                <p class="text-center text-gray-500">Please select your operating system above.</p>
+            </div>
+        </section>
+
+        <section id="learning-path" class="py-12 md:py-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Your Learning Path</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">With your environment ready, it's time to start learning. The community has produced a wealth of high-quality resources. We've curated the best tutorials, books, and videos to guide you from your first triangle to advanced rendering techniques.</p>
+
+            <div class="flex justify-center mb-8">
+                <div class="bg-gray-200 p-1 rounded-full flex space-x-1">
+                    <button data-tab="tutorials" class="tab-btn px-4 py-2 text-sm font-medium rounded-full transition active">Tutorials</button>
+                    <button data-tab="books" class="tab-btn px-4 py-2 text-sm font-medium rounded-full transition">Books</button>
+                    <button data-tab="videos" class="tab-btn px-4 py-2 text-sm font-medium rounded-full transition">Videos</button>
+                </div>
+            </div>
+
+            <div id="learning-content" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+        </section>
+
+        <section id="practice" class="py-12 md:py-16 bg-white rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold text-center mb-2">Get Your Hands Dirty</h2>
+             <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">Theory is important, but graphics programming is a practical skill. The best way to learn is by writing code. Explore example projects to see how concepts are implemented, and connect with the community when you get stuck. Don't be afraid to experiment!</p>
+
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6 text-center text-[#81B29A]">Practice Projects</h3>
+                    <div class="space-y-6">
+                        <div class="bg-[#FDFBF6] p-6 rounded-lg">
+                            <h4 class="font-bold text-lg">Start with a Triangle</h4>
+                            <p class="text-gray-600 mt-2">Your first goal should be simple: create a window and render a single, colored triangle. This "Hello World" of graphics programming confirms your entire setup is working correctly and teaches you the fundamental rendering loop.</p>
+                        </div>
+                         <div class="bg-[#FDFBF6] p-6 rounded-lg">
+                            <h4 class="font-bold text-lg">Explore Code Repositories</h4>
+                            <p class="text-gray-600 mt-2">Reading professional code is a great way to learn. These GitHub repositories are filled with clear examples that accompany popular tutorials.</p>
+                            <div class="mt-4 space-x-4">
+                                <a href="https://github.com/opengl-tutorials/ogl" target="_blank" class="text-[#E07A5F] hover:underline">opengl-tutorial.org Code</a>
+                                <a href="https://github.com/yahiaetman/OpenGL-Examples" target="_blank" class="text-[#E07A5F] hover:underline">More C++ Examples</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <div>
+                    <h3 class="text-2xl font-semibold mb-6 text-center text-[#81B29A]">Connect with the Community</h3>
+                    <div class="space-y-6">
+                        <div class="bg-[#FDFBF6] p-6 rounded-lg">
+                            <h4 class="font-bold text-lg">r/opengl on Reddit</h4>
+                            <p class="text-gray-600 mt-2">The main hub for all things OpenGL. A perfect place to ask questions, see what others are creating, and get help when you're stuck. Very beginner-friendly.</p>
+                             <a href="https://www.reddit.com/r/opengl/" target="_blank" class="text-[#E07A5F] hover:underline mt-2 inline-block">Visit Subreddit &rarr;</a>
+                        </div>
+                         <div class="bg-[#FDFBF6] p-6 rounded-lg">
+                            <h4 class="font-bold text-lg">C++ Forums</h4>
+                            <p class="text-gray-600 mt-2">For C++ specific issues, forums like cplusplus.com have dedicated OpenGL sections where you can find answers to common language-related problems.</p>
+                             <a href="https://cplusplus.com/forum/general/1/" target="_blank" class="text-[#E07A5F] hover:underline mt-2 inline-block">Visit Forum &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="next-steps" class="py-12 md:py-16">
+            <h2 class="text-3xl font-bold text-center mb-2">Beyond the Triangle</h2>
+            <p class="text-center text-gray-600 max-w-3xl mx-auto mb-12">Once you've mastered the fundamentals, a vast world of advanced graphics techniques opens up. You can also look ahead to next-generation APIs like Vulkan, for which your OpenGL knowledge provides the perfect foundation.</p>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-6 text-center text-[#81B29A]">Advanced OpenGL Techniques</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">Deferred Shading</div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">Shadow Mapping</div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">Skeletal Animation</div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">Particle Systems</div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">Tessellation</div>
+                        <div class="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition">Ray Tracing (Compute)</div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-semibold mb-4 text-[#81B29A]">The Path to Vulkan</h3>
+                    <p class="text-gray-700 leading-relaxed mb-4">Vulkan is the next-generation graphics API from Khronos. It offers maximum performance and control by being much more "explicit" and low-level than OpenGL. This also makes it significantly more complex.</p>
+                    <p class="text-gray-700 leading-relaxed font-medium">Learning modern OpenGL first is the recommended path. It teaches you the core concepts of the GPU pipeline in a more managed environment, making the transition to Vulkan's complexity far more manageable.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-8 border-t border-gray-200">
+        <p class="text-gray-500">Created to make your graphics programming journey a little bit easier.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const pipelineStages = {
+                vertex: { title: 'Vertex Data', description: 'This is the starting point. Your 3D models are defined as a collection of vertices, each with a position and other attributes like color or texture coordinates. This raw data is sent to the GPU.' },
+                'vertex-shader': { title: 'Vertex Shader', description: 'A small program you write that runs on the GPU for every single vertex. Its main job is to transform the 3D position of each vertex into the 2D coordinates that will appear on your screen. It can also pass data (like colors) to the next stage.' },
+                rasterization: { title: 'Rasterization', description: 'The GPU takes the 2D vertices from the vertex shader and figures out which pixels on the screen are part of the shape (e.g., a triangle). This process generates "fragments" for every potentially visible pixel.' },
+                'fragment-shader': { title: 'Fragment Shader', description: 'Another program you write that runs for every single fragment. Its primary job is to determine the final color of that pixel. This is where lighting, textures, and other complex visual effects are calculated.' },
+                output: { title: 'Framebuffer', description: 'After the fragment shader runs, a final series of tests (like depth testing) occurs. The pixels that pass are written to the framebuffer, which is a memory buffer that holds the final image you see on your screen.' },
+            };
+
+            const pipelineDiagram = document.getElementById('pipeline-diagram');
+            const pipelineInfo = document.getElementById('pipeline-info');
+            
+            pipelineDiagram.addEventListener('click', (e) => {
+                const stageEl = e.target.closest('.pipeline-stage');
+                if (stageEl) {
+                    const stageKey = stageEl.dataset.stage;
+                    const stageData = pipelineStages[stageKey];
+                    
+                    document.querySelectorAll('.pipeline-stage').forEach(el => el.classList.remove('active'));
+                    stageEl.classList.add('active');
+
+                    pipelineInfo.innerHTML = `
+                        <h4 class="text-xl font-bold text-[#E07A5F] mb-2 fade-in">${stageData.title}</h4>
+                        <p class="text-gray-700 leading-relaxed fade-in">${stageData.description}</p>
+                    `;
+                }
+            });
+
+            const setupContent = {
+                windows: `
+                    <div class="bg-[#FDFBF6] p-6 rounded-lg fade-in">
+                        <h3 class="text-xl font-semibold mb-4 text-[#E07A5F]">Windows Setup Checklist (C++)</h3>
+                        <ul class="space-y-3 list-disc list-inside text-gray-700">
+                            <li><strong>Install a C++ Compiler:</strong> Get Visual Studio Community, which includes the MSVC compiler and build tools.</li>
+                            <li><strong>Update Graphics Drivers:</strong> This is CRITICAL. Go to NVIDIA's, AMD's, or Intel's website and download the latest drivers for your GPU.</li>
+                            <li><strong>Use a Build System:</strong> CMake is highly recommended to manage project dependencies and build configurations.</li>
+                            <li><strong>Get Helper Libraries:</strong>
+                                <ul class="pl-6 mt-2 space-y-1">
+                                    <li><strong>GLFW:</strong> For creating windows and handling input.</li>
+                                    <li><strong>GLAD:</strong> To load modern OpenGL function pointers.</li>
+                                    <li><strong>GLM:</strong> For essential graphics math (vectors, matrices).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Link Libraries:</strong> In your project settings, you'll need to link against <code>opengl32.lib</code>.</li>
+                        </ul>
+                    </div>
+                `,
+                macos: `
+                    <div class="bg-[#FDFBF6] p-6 rounded-lg fade-in">
+                        <h3 class="text-xl font-semibold mb-4 text-[#E07A5F]">macOS Setup Checklist (C++)</h3>
+                        <ul class="space-y-3 list-disc list-inside text-gray-700">
+                            <li><strong>Install Xcode:</strong> Get the latest version from the App Store. This includes the Clang compiler and all necessary OpenGL headers.</li>
+                            <li><strong>Update macOS:</strong> OpenGL updates are tied to the OS. Ensure you are on the latest version of macOS for the best support.</li>
+                            <li><strong>Use a Build System:</strong> CMake is the standard for cross-platform C++ development.</li>
+                            <li><strong>Get Helper Libraries:</strong>
+                                <ul class="pl-6 mt-2 space-y-1">
+                                    <li><strong>GLFW:</strong> For windowing. Can be installed via Homebrew.</li>
+                                    <li><strong>GLAD:</strong> For loading OpenGL functions.</li>
+                                    <li><strong>GLM:</strong> For graphics math.</li>
+                                </ul>
+                            </li>
+                            <li><strong>Link Frameworks:</strong> You'll need to link against the <code>OpenGL.framework</code> in your Xcode or CMake project.</li>
+                        </ul>
+                    </div>
+                `,
+                linux: `
+                    <div class="bg-[#FDFBF6] p-6 rounded-lg fade-in">
+                        <h3 class="text-xl font-semibold mb-4 text-[#E07A5F]">Linux Setup Checklist (C++)</h3>
+                        <ul class="space-y-3 list-disc list-inside text-gray-700">
+                            <li><strong>Install Build Essentials:</strong> Use your package manager (e.g., <code>sudo apt install build-essential</code> on Debian/Ubuntu) to get a C++ compiler.</li>
+                            <li><strong>Update Graphics Drivers:</strong> Install the proprietary drivers for your NVIDIA or AMD GPU for the best performance.</li>
+                            <li><strong>Install Development Libraries:</strong> Use your package manager to install development packages for X11, OpenGL (e.g., <code>libgl1-mesa-dev</code>), and other dependencies.</li>
+                            <li><strong>Get Helper Libraries:</strong>
+                                <ul class="pl-6 mt-2 space-y-1">
+                                    <li><strong>GLFW:</strong> Install the development package (e.g., <code>libglfw3-dev</code>).</li>
+                                    <li><strong>GLAD:</strong> Generate and include in your project.</li>
+                                    <li><strong>GLM:</strong> Install the development package (e.g., <code>libglm-dev</code>).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Link Libraries:</strong> In your build command, you'll need to link with flags like <code>-lGL -lglfw -ldl</code>.</li>
+                        </ul>
+                    </div>
+                `
+            };
+            
+            const osBtns = document.querySelectorAll('.os-btn');
+            const setupContainer = document.getElementById('setup-content');
+
+            osBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    osBtns.forEach(b => b.classList.remove('active', 'bg-[#E07A5F]', 'text-white'));
+                    btn.classList.add('active', 'bg-[#E07A5F]', 'text-white');
+                    const os = btn.dataset.os;
+                    setupContainer.innerHTML = setupContent[os];
+                });
+            });
+            osBtns[0].click();
+
+            const learningResources = {
+                tutorials: [
+                    { title: 'LearnOpenGL.com', desc: 'The gold standard for beginners. A comprehensive, step-by-step guide to modern core-profile OpenGL with clear C++ examples.', link: 'https://learnopengl.com/', recommended: true },
+                    { title: 'ogldev.org', desc: 'A robust series of C++ tutorials that progress from the basics to advanced techniques like shadow mapping and skeletal animation.', link: 'https://ogldev.org/' },
+                    { title: 'opengl-tutorial.org', desc: 'Free tutorials for modern OpenGL 3.3+ with an active GitHub repository containing all the example code for hands-on learning.', link: 'https://opengl-tutorial.org/' },
+                ],
+                books: [
+                    { title: 'Learn OpenGL Book', desc: 'The print version of the beloved website. Perfect for those who prefer a physical book for structured learning and reference.', link: 'https://learnopengl.com/book/' },
+                    { title: 'OpenGL SuperBible', desc: 'A comprehensive tutorial and reference for mastering OpenGL 4.5. Excellent for a deep dive into advanced concepts.', link: 'https://www.openglsuperbible.com/' },
+                    { title: 'Python & OpenGL Frameworks', desc: 'A book specifically for Python users, guiding them through building 3D graphics frameworks with PyOpenGL.', link: 'https://www.routledge.com/Developing-Graphics-Frameworks-with-Python-and-OpenGL/Stemkoski-Pascale/p/book/9781138499480' },
+                ],
+                videos: [
+                    { title: 'Video Tutorials Rock', desc: 'Free video tutorials for C++ and GLUT. Covers foundational topics well, but be aware it uses the older GLUT library.', link: 'https://www.videotutorialsrock.com/' },
+                    { title: 'Udemy Courses', desc: 'Structured, paid courses like the "Failproof OpenGL course for beginners" can provide a guided learning experience with exercises.', link: 'https://www.udemy.com/course/failproof-opengl-course-for-beginners/' },
+                    { title: 'YouTube Game Tutorials', desc: 'Many channels offer tutorials on creating 3D games using C++ with modern libraries like GLFW and GLAD.', link: 'https://www.youtube.com/results?search_query=opengl+c%2B%2B+game+tutorial' },
+                ]
+            };
+            
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const learningContainer = document.getElementById('learning-content');
+
+            function renderLearningContent(category) {
+                learningContainer.innerHTML = '';
+                learningResources[category].forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col fade-in';
+                    card.innerHTML = `
+                        <div class="flex-grow">
+                            ${item.recommended ? '<span class="inline-block bg-[#81B29A] text-white text-xs font-bold px-2 py-1 rounded-full mb-3">Recommended</span>' : ''}
+                            <h4 class="font-bold text-xl mb-2">${item.title}</h4>
+                            <p class="text-gray-600">${item.desc}</p>
+                        </div>
+                        <a href="${item.link}" target="_blank" class="mt-4 text-[#E07A5F] font-semibold hover:underline self-start">Learn More &rarr;</a>
+                    `;
+                    learningContainer.appendChild(card);
+                });
+            }
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const tab = btn.dataset.tab;
+                    renderLearningContent(tab);
+                });
+            });
+            renderLearningContent('tutorials');
+
+            const sections = document.querySelectorAll('main section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            const ctx = document.getElementById('apiComparisonChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Immediate Mode (Old)', 'Core Profile (Modern)', 'Vulkan (Next-Gen)'],
+                    datasets: [
+                        {
+                            label: 'Ease of Learning',
+                            data: [8, 6, 2],
+                            backgroundColor: 'rgba(129, 178, 154, 0.7)',
+                            borderColor: 'rgba(129, 178, 154, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Performance / Control',
+                            data: [3, 7, 10],
+                            backgroundColor: 'rgba(224, 122, 95, 0.7)',
+                            borderColor: 'rgba(224, 122, 95, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 10,
+                             grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        y: {
+                             grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += `${context.parsed.x} / 10`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
